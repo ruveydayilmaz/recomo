@@ -5,7 +5,7 @@ const MovieCard = ({ movie, selected, onSelect }) => {
   var posterUrl;
 
   if (movie.poster_path) {
-    posterUrl = `https://image.tmdb.org/t/p/original/${movie.poster_path}`;
+    posterUrl = `/img/${movie.poster_path}`;
   } else {
     posterUrl = noImage;
   }
