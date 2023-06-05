@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
+import domtoimage from "dom-to-image";
 import ColorPicker from "./ColorPicker";
 import PreviewedMovieGrid from "./PreviewedMovieGrid";
+import SocialMediaButtons from "./SocialMediaButtons";
 
 const PreviewModal = ({
   cardStyle,
@@ -21,10 +23,43 @@ const PreviewModal = ({
       borderRadius: value + "px",
     }));
   };
+  
+  const handleExportImage = () => {
+  
+    domtoimage
+      .toPng(cardContainerRef.current)
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = "selected_movies.png";
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Error exporting image:", error);
+      });
+  };
+  
+  const handleShareImage = () => {
+    domtoimage
+      .toBlob(cardContainerRef.current)
+      .then((blob) => {
+        const filesArray = [
+          new File([blob], "selected_movies.png", { type: blob.type }),
+        ];
+        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+          navigator.share({ files: filesArray });
+        } else {
+          console.error("Web Share API not supported.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error sharing image:", error);
+      });
+  };
 
   return (
-    <div class="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 z-40">
-      <div class="w-full h-3/4 max-w-5xl overflow-y-auto sm:rounded-lg bg-white p-4">
+    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 z-40">
+      <div className="w-full h-3/4 max-w-5xl overflow-y-auto sm:rounded-lg bg-white p-4">
         <div className="flex justify-end">
           <div
             onClick={() => setPreviewOpen(false)}
@@ -49,38 +84,38 @@ const PreviewModal = ({
                 onChange={handleBorderRadiusChange}
                 id="default-range"
                 type="range"
-                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
               />
               <label
                 for="default-range"
-                class="ml-4 text-sm font-medium text-gray-900 dark:text-white"
+                className="ml-4 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Border
               </label>
             </div>
 
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={isSwitchOn}
                 onChange={() => setIsSwitchOn(!isSwitchOn)}
-                class="sr-only peer"
+                className="sr-only peer"
               />
-              <div class="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Card Style
               </span>
             </label>
 
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={isThemeSwitchOn}
                 onChange={() => setIsThemeSwitchOn(!isThemeSwitchOn)}
-                class="sr-only peer"
+                className="sr-only peer"
               />
-              <div class="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Card Theme
               </span>
             </label>
@@ -110,6 +145,17 @@ const PreviewModal = ({
               isSwitchOn={isSwitchOn}
               isThemeSwitchOn={isThemeSwitchOn}
             />
+          </div>
+        </div>
+        <div className="flex justify-between">
+          <button
+            onClick={handleExportImage}
+            className="bg-blue-500 hover:bg-blue-600 text-white rounded w-1/4"
+          >
+            Export
+          </button>
+          <div className="w-3/4">
+            <SocialMediaButtons onShareImage={handleShareImage} />
           </div>
         </div>
       </div>
