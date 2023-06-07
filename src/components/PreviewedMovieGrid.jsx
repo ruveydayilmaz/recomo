@@ -5,13 +5,13 @@ const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn }) => {
   const angleStep = 14; // Difference in rotation angle between cards
   const initialRotation = -23; // Starting rotation angle
   const elevationStep = 50; // Difference in elevation between cards
-  const initialElevation = -30; // Starting elevation
+  const initialElevation = -60; // Starting elevation
 
   const cardColor = isThemeSwitchOn ? "#18181b" : "white";
   const titleColor = isThemeSwitchOn ? "white" : "#374151";
 
   return (
-    <div className="flex justify-center pb-12">
+    <div className="flex justify-center">
       {movies.map((movie, index) => {
         const rotation = isSwitchOn ? initialRotation + index * angleStep : 0;
         const elevation = isSwitchOn

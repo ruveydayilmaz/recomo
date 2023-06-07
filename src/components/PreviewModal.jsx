@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
+import html2canvas from "html2canvas";
+
 import ColorPicker from "./ColorPicker";
 import PreviewedMovieGrid from "./PreviewedMovieGrid";
+import DownloadIcon from "../assets/download.png";
 
 const PreviewModal = ({
   cardStyle,
@@ -22,9 +25,24 @@ const PreviewModal = ({
     }));
   };
 
+  const handleExportImage = () => {
+    cardContainerRef.current.style.border = "none";
+    html2canvas(cardContainerRef.current, {
+      backgroundColor: null,
+      scale: 2,
+      allowTaint: true,
+      useCors: true,
+    }).then((canvas) => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL();
+      link.download = "recomo.png";
+      link.click();
+    });
+  };
+
   return (
-    <div class="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 z-40">
-      <div class="w-full h-3/4 max-w-5xl overflow-y-auto sm:rounded-lg bg-white p-4">
+    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 z-40">
+      <div className="w-full max-w-5xl overflow-y-auto sm:rounded-lg bg-white p-4">
         <div className="flex justify-end">
           <div
             onClick={() => setPreviewOpen(false)}
@@ -46,63 +64,52 @@ const PreviewModal = ({
             <div className="flex items-center">
               <input
                 value={parseInt(cardStyle.borderRadius)}
+                max={30}
                 onChange={handleBorderRadiusChange}
                 id="default-range"
                 type="range"
-                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
               />
               <label
                 for="default-range"
-                class="ml-4 text-sm font-medium text-gray-900 dark:text-white"
+                className="ml-4 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Border
               </label>
             </div>
 
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={isSwitchOn}
                 onChange={() => setIsSwitchOn(!isSwitchOn)}
-                class="sr-only peer"
+                className="sr-only peer"
               />
-              <div class="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Card Style
               </span>
             </label>
 
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
                 checked={isThemeSwitchOn}
                 onChange={() => setIsThemeSwitchOn(!isThemeSwitchOn)}
-                class="sr-only peer"
+                className="sr-only peer"
               />
-              <div class="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Card Theme
               </span>
             </label>
           </div>
 
           <div
-            className="w-full h-[450px] min-w-[60rem] selected-movies rounded mt-4 bg-gray-100 border border-gray-300 flex flex-col justify-around"
+            className="w-full h-[450px] min-w-[60rem] selected-movies rounded mt-4 bg-gray-100 border border-gray-300 flex flex-col justify-around relative"
             style={cardStyle}
             ref={cardContainerRef}
           >
-            <p
-              className="text-md font-medium text-gray-800 text-center z-10"
-              style={{
-                color: isThemeSwitchOn ? "black" : "white",
-                textShadow: isThemeSwitchOn
-                  ? "1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff"
-                  : "1px 0 gray, -1px 0 gray, 0 1px gray, 0 -1px gray",
-              }}
-            >
-              just for you 👻🎞️
-            </p>
-
             <PreviewedMovieGrid
               movies={selectedMovies}
               onSelect={handleMovieSelect}
@@ -110,7 +117,22 @@ const PreviewModal = ({
               isSwitchOn={isSwitchOn}
               isThemeSwitchOn={isThemeSwitchOn}
             />
+            <p
+              className="text-[10px] absolute bottom-2 left-1/2 transform -translate-x-1/2"
+              style={{
+                textAlign: "center",
+                width: "100%",
+                color: isThemeSwitchOn ? "#4b5563" : "#9ca3af",
+              }}
+            >
+              Generated by recomo.vercel.app
+            </p>
           </div>
+        </div>
+        <div className="flex justify-between">
+          <button onClick={handleExportImage} className="rounded-full w-12">
+            <img className="hover:" src={DownloadIcon} alt="download" />
+          </button>
         </div>
       </div>
     </div>

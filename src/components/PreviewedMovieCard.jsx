@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import noImage from "../assets/no-image.png";
 
 const PreviewedMovieCard = ({
@@ -10,10 +10,9 @@ const PreviewedMovieCard = ({
   titleColor,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const titleRef = useRef(null);
 
-  const posterUrl = movie.poster_path
-    ? `https://image.tmdb.org/t/p/original/${movie.poster_path}`
-    : noImage;
+  const posterUrl = movie.poster_path ? `/img/${movie.poster_path}` : noImage;
 
   const handleCardClick = () => {
     onSelect(movie);
@@ -21,8 +20,8 @@ const PreviewedMovieCard = ({
 
   const cardStyle = {
     transform: `rotate(${rotation}deg) translateY(${elevation}px)`,
-    backgroundColor: `${cardColor}`,
-    color: `${titleColor}`,
+    backgroundColor: cardColor,
+    color: titleColor,
   };
 
   const handleMouseEnter = () => {
@@ -33,9 +32,27 @@ const PreviewedMovieCard = ({
     setIsHovered(false);
   };
 
+  useEffect(() => {
+    if (titleRef.current) {
+      const titleElement = titleRef.current;
+      const maxTitleHeight = 60;
+      const maxFontSize = 14;
+
+      titleElement.style.fontSize = "";
+
+      const titleHeight = titleElement.offsetHeight;
+
+      if (titleHeight > maxTitleHeight) {
+        const fontSizeMultiplier = maxTitleHeight / titleHeight;
+        const newFontSize = Math.floor(fontSizeMultiplier * maxFontSize);
+        titleElement.style.fontSize = `${newFontSize}px`;
+      }
+    }
+  }, [movie.title]);
+
   return (
     <div
-      className="bg-white w-48 h-94 shadow-md rounded m-3 flex flex-col items-center justify-center relative"
+      className="bg-white w-48 h-94 shadow-md rounded m-3 flex flex-col items-center relative"
       style={cardStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -66,7 +83,7 @@ const PreviewedMovieCard = ({
           target="_blank"
           className="hover:text-yellow-600"
         >
-          <span className="text-sm font-semibold tracking-wide break-words">
+          <span ref={titleRef} className="text-sm font-semibold break-words">
             {movie.title}
           </span>
         </a>

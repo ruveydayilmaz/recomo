@@ -1,8 +1,7 @@
-import { defineConfig } from 'vite'
-import postcss from './postcss.config.js'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import postcss from './postcss.config.js';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   css: {
     postcss,
@@ -13,7 +12,7 @@ export default defineConfig({
       {
         find: /^~.+/,
         replacement: (val) => {
-          return val.replace(/^~/, "");
+          return val.replace(/^~/,"");
         },
       },
     ],
@@ -21,6 +20,20 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
-    }
-  }
-})
+    },
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.themoviedb.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+      '/img': {
+        target: 'https://image.tmdb.org/t/p/original',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/img/, ''),
+      },
+    },
+  },
+});
