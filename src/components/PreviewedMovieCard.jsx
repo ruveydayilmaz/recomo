@@ -60,7 +60,7 @@ const PreviewedMovieCard = ({
       {isHovered && (
         <span
           onClick={handleCardClick}
-          className="absolute p-2 -right-2 -top-2 rounded-full bg-gray-300 hover:bg-gray-500 cursor-pointer hover:text-gray-300 text-gray-500 w-8 h-8 flex items-center justify-center"
+          className="absolute p-2 -right-2 -top-2 rounded-full bg-gray-300 dark:bg-gray-900 hover:bg-gray-500 cursor-pointer hover:text-gray-300 text-gray-500 w-8 h-8 flex items-center justify-center"
         >
           <svg
             className="w-4 h-4 fill-current"
@@ -72,7 +72,7 @@ const PreviewedMovieCard = ({
         </span>
       )}
       <img
-        className="w-40 mt-4 min-w-[10rem]"
+        className="w-40 mt-4 min-w-[10rem] h-full"
         src={posterUrl}
         alt={movie.title}
       />
