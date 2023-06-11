@@ -44,8 +44,8 @@ const ColorPicker = ({ cardStyle, setCardStyle }) => {
         </svg>
       </button>
       <label
-        for="default-range"
-        class="block text-sm font-medium text-gray-900 dark:text-white ml-4"
+        htmlFor="default-range"
+        className="block text-sm font-medium text-gray-900 dark:text-white ml-4"
       >
         Background Color
       </label>
