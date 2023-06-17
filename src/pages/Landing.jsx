@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { searchMovie } from "../api/movies";
 import MovieCard from "../components/MovieCard";
-
 import PreviewModal from "../components/PreviewModal";
 import Footer from "../components/Footer";
 
@@ -18,11 +17,10 @@ const Landing = () => {
     backgroundColor: "#f3f4f6",
   });
 
+  // Function to handle movie selection
   const handleMovieSelect = (movie) => {
     if (selectedMovies.includes(movie)) {
-      setSelectedMovies(
-        selectedMovies.filter((selectedMovie) => selectedMovie !== movie)
-      );
+      setSelectedMovies(selectedMovies.filter((selectedMovie) => selectedMovie !== movie));
     } else {
       if (selectedMovies.length < 4) {
         setSelectedMovies([...selectedMovies, movie]);
@@ -38,10 +36,12 @@ const Landing = () => {
     }
   };
 
+  // Function to handle search input change
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
+  // Function to handle search form submission
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
     if (searchQuery.trim() !== "") {
@@ -59,11 +59,10 @@ const Landing = () => {
 
   return (
     <div className="flex flex-col items-center relative h-screen justify-between">
-      {selectedMovies.length != 0 && (
+      {/* Render the preview button if movies are selected */}
+      {selectedMovies.length !== 0 && (
         <div
-          className={`fixed top-8 right-3 md:right-12 z-30 ${
-            isFirstMovieSelected ? "animate-shake" : ""
-          }`}
+          className={`fixed top-8 right-3 md:right-12 z-30 ${isFirstMovieSelected ? "animate-shake" : ""}`}
           onClick={() => setPreviewOpen(!previewOpen)}
         >
           <button className="flex p-2.5 bg-[#ADD8E6] rounded-xl hover:rounded-3xl transition-all duration-300 text-white border-2 border-white">
@@ -84,8 +83,10 @@ const Landing = () => {
           </button>
         </div>
       )}
+
+      {/* Render the alert if maximum movie selection limit is reached */}
       {showAlert && (
-        <div className="flex bg-[#ADD8E6] rounded-lg py-4 px-8  text-sm text-gray-700 fixed border-2 border-white top-8 z-40">
+        <div className="flex bg-[#ADD8E6] rounded-lg py-4 px-8 text-sm text-gray-700 fixed border-2 border-white top-8 z-40">
           <svg
             className="w-5 h-5 inline mr-3"
             fill="white"
@@ -99,11 +100,12 @@ const Landing = () => {
             ></path>
           </svg>
           <div>
-            <span className="font-medium">Info alert!</span> You can select max
-            4 movies
+            <span className="font-medium">Info alert!</span> You can select a maximum of 4 movies.
           </div>
         </div>
       )}
+
+      {/* Render the movie selection section */}
       <div className="text-center sm:mb-12 px-2 mt-48 flex flex-col items-center">
         <h1 className="text-2xl sm:text-xl md:text-4xl lg:text-6xl font-bold">
           Share movies with friends
@@ -112,6 +114,7 @@ const Landing = () => {
           Select your favorite movies, create a card and share it with your friends✨
         </p>
 
+        {/* Render the search form */}
         <form onSubmit={handleSearchSubmit} className="flex mt-14">
           <input
             type="text"
@@ -129,6 +132,7 @@ const Landing = () => {
         </form>
       </div>
 
+      {/* Render the preview modal if it's open */}
       {previewOpen && (
         <PreviewModal
           cardStyle={cardStyle}
@@ -139,6 +143,7 @@ const Landing = () => {
         />
       )}
 
+      {/* Render loading spinner or movie cards */}
       {loading ? (
         <div className="">
           <div className="w-8 h-8 border-4 border-yellow-200 rounded-full animate-spin"></div>
@@ -159,6 +164,7 @@ const Landing = () => {
         </div>
       )}
 
+      {/* Render the footer */}
       <Footer />
     </div>
   );

@@ -8,9 +8,13 @@ const Card = () => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const imgRef = useRef(null);
 
+  /**
+   * Tilt effect for the card
+   */
   useEffect(() => {
     const img = imgRef.current;
 
+    // Function to handle the mouse movement event
     const handleMouseMove = (event) => {
       const { offsetX, offsetY } = event;
       const x = (offsetX / img.offsetWidth - 0.5) * 20;
@@ -19,19 +23,23 @@ const Card = () => {
       img.style.transform = `perspective(100rem) rotateX(${y}deg) rotateY(${x}deg)`;
     };
 
+    // Function to handle the mouse enter event
     const handleMouseEnter = () => {
       img.style.transition = "transform 0.3s";
     };
 
+    // Function to handle the mouse leave event
     const handleMouseLeave = () => {
       img.style.transition = "transform 0.6s";
       img.style.transform = "perspective(100rem) rotateX(0) rotateY(0)";
     };
 
+    // Add event listeners to the image element
     img.addEventListener("mousemove", handleMouseMove);
     img.addEventListener("mouseenter", handleMouseEnter);
     img.addEventListener("mouseleave", handleMouseLeave);
 
+    // Clean up by removing event listeners when the component is unmounted
     return () => {
       img.removeEventListener("mousemove", handleMouseMove);
       img.removeEventListener("mouseenter", handleMouseEnter);
@@ -39,6 +47,9 @@ const Card = () => {
     };
   }, []);
 
+  /**
+   * Handles the image load event.
+   */
   const handleImageLoad = () => {
     setIsImageLoaded(true);
   };

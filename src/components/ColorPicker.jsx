@@ -1,9 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 
+/**
+ * A color picker component for selecting the background color of a card.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.cardStyle - The style object for the card.
+ * @param {Function} props.setCardStyle - The function to update the card style.
+ * @returns {JSX.Element} The ColorPicker component.
+ */
 const ColorPicker = ({ cardStyle, setCardStyle }) => {
   const [isOpen, setIsOpen] = useState(false);
   const isFirstRender = useRef(true);
 
+  /**
+   * Handles the change of background color.
+   *
+   * @param {string} color - The selected color.
+   */
   const handleBackgroundColorChange = (color) => {
     setCardStyle({ ...cardStyle, backgroundColor: color });
   };
@@ -15,10 +28,18 @@ const ColorPicker = ({ cardStyle, setCardStyle }) => {
     }
   }, []);
 
+  /**
+   * Toggles the color picker's open state.
+   */
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
   };
 
+  /**
+   * Handles the change of the color input.
+   *
+   * @param {Object} e - The change event.
+   */
   const handleColorInputChange = (e) => {
     handleBackgroundColorChange(e.target.value);
   };

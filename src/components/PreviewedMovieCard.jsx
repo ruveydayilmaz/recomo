@@ -14,6 +14,9 @@ const PreviewedMovieCard = ({
 
   const posterUrl = movie.poster_path ? `/img/${movie.poster_path}` : noImage;
 
+  /**
+   * Handles the click event on the card.
+   */
   const handleCardClick = () => {
     onSelect(movie);
   };
@@ -24,10 +27,16 @@ const PreviewedMovieCard = ({
     color: titleColor,
   };
 
+  /**
+   * Handles the mouse enter event on the card.
+   */
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
 
+  /**
+   * Handles the mouse leave event on the card.
+   */
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
