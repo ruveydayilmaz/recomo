@@ -98,8 +98,8 @@ const PreviewModal = ({
 
   return (
     <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 z-40">
-      <div className="w-full max-w-5xl overflow-y-auto sm:rounded-lg bg-white p-4 relative ">
-        <div className="flex justify-end">
+      <div className="w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl overflow-y-auto sm:rounded-lg bg-white p-4 relative">
+        <div className="flex justify-end w-[800px] md:w-full">
           <div
             onClick={() => {
               setPreviewOpen(false);
@@ -116,8 +116,8 @@ const PreviewModal = ({
             </svg>
           </div>
         </div>
-        <div className="flex flex-col items-center mb-4">
-          <div className="flex bg-white w-full justify-around">
+        <div className="flex flex-col md:items-center mb-4">
+          <div className="flex bg-white justify-around w-[800px] md:w-full">
             <ColorPicker cardStyle={cardStyle} setCardStyle={setCardStyle} />
 
             <div className="flex items-center">
@@ -189,7 +189,7 @@ const PreviewModal = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <div className="w-1/12 ">
+          <div className="w-1/4 sm:w-1/2 md:w-2/3 lg:w-3/4 xl:w-1/12">
             <p className="font-medium text-sm text-gray-900 select-none pl-1 pb-2">
               Share
             </p>
@@ -219,9 +219,9 @@ const PreviewModal = ({
             </div>
           </div>
 
-          <div className="w-1/3">
+          <div className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4">
             <button
-              className="font-medium text-sm text-gray-900 hover:text-yellow-500"
+              className="font-medium text-[11px] md:text-sm text-gray-900 hover:text-yellow-500"
               onClick={handleShareImage}
             >
               Or click <span className="text-yellow-500">here</span> to generate
@@ -241,6 +241,7 @@ const PreviewModal = ({
               {!isCopied && (
                 <input
                   defaultValue={imageUrl}
+                  title="copy"
                   className="py-2 focus:outline-none w-full text-gray-500 text-sm cursor-pointer hover:bg-gray-100"
                 />
               )}

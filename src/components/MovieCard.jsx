@@ -23,7 +23,7 @@ const MovieCard = ({ movie, selected, onSelect }) => {
       <div className="sm:max-w-xl sm:mx-auto">
         <div
           style={cardStyle}
-          className="bg-white max-h-80 sm:rounded-xl p-4 flex space-x-8"
+          className="bg-white max-h-80 rounded sm:rounded-xl p-4 flex space-x-8"
         >
           <div className="h-32 overflow-visible">
             <img
@@ -35,7 +35,7 @@ const MovieCard = ({ movie, selected, onSelect }) => {
           <div className="flex-1 flex-col">
             <div className="flex justify-between items-start">
               <h2 className="text-l font-bold">{movie.title}</h2>
-              <span className="bg-yellow-400 font-bold rounded-md p-1 pl-2 pr-2">
+              <span className="bg-yellow-400 font-bold rounded-md p-1 pl-2 pr-2 ml-1">
                 {movie.vote_average.toFixed(1)}
               </span>
             </div>

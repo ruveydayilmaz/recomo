@@ -11,13 +11,13 @@ const Footer = () => {
             />
           </div>
           <div className="flex flex-col space-y-4 ml-4">
-            <div className="flex flex-col items-center md:items-start">
+            <div className="flex flex-col md:items-start">
               <h6 className="text-m font-medium text-gray-600 ">Ruveyda</h6>
               <p className="text-base font-medium text-gray-400">
                 Backend Developer
               </p>
             </div>
-            <div className="flex items-center justify-center space-x-2 md:justify-start">
+            <div className="flex space-x-2 justify-start">
               <a
                 href="https://twitter.com/ruvsdev"
                 target="_blank"
