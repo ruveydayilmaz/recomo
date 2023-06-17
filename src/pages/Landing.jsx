@@ -20,7 +20,6 @@ const Landing = () => {
 
   const handleMovieSelect = (movie) => {
     if (selectedMovies.includes(movie)) {
-      setShowAlert(false);
       setSelectedMovies(
         selectedMovies.filter((selectedMovie) => selectedMovie !== movie)
       );
@@ -32,6 +31,9 @@ const Landing = () => {
         }
       } else {
         setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false); // Clear the alert after 3 seconds
+        }, 3000);
       }
     }
   };
@@ -59,12 +61,12 @@ const Landing = () => {
     <div className="flex flex-col items-center relative h-screen justify-between">
       {selectedMovies.length != 0 && (
         <div
-          className={`fixed top-8 right-12 z-30 ${
+          className={`fixed top-8 right-3 md:right-12 z-30 ${
             isFirstMovieSelected ? "animate-shake" : ""
           }`}
           onClick={() => setPreviewOpen(!previewOpen)}
         >
-          <button className="flex p-2.5 bg-[#ADD8E6] rounded-xl hover:rounded-3xl transition-all duration-300 text-white">
+          <button className="flex p-2.5 bg-[#ADD8E6] rounded-xl hover:rounded-3xl transition-all duration-300 text-white border-2 border-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -83,7 +85,7 @@ const Landing = () => {
         </div>
       )}
       {showAlert && (
-        <div className="flex bg-[#ADD8E6] rounded-lg p-4 text-sm text-gray-700 absolute top-8">
+        <div className="flex bg-[#ADD8E6] rounded-lg py-4 px-8  text-sm text-gray-700 fixed border-2 border-white top-8 z-40">
           <svg
             className="w-5 h-5 inline mr-3"
             fill="white"
@@ -97,14 +99,35 @@ const Landing = () => {
             ></path>
           </svg>
           <div>
-            <span className="font-medium">Info alert!</span> You can select max 4 movies
+            <span className="font-medium">Info alert!</span> You can select max
+            4 movies
           </div>
         </div>
       )}
-      <h1 className="text-6xl font-bold mt-48">Share movies with friends</h1>
-      <span className="mt-2 mb-12">
-        Select your favorite movies, create a card and share it with your friends✨
-      </span>
+      <div className="text-center sm:mb-12 px-2 mt-48 flex flex-col items-center">
+        <h1 className="text-2xl sm:text-xl md:text-4xl lg:text-6xl font-bold">
+          Share movies with friends
+        </h1>
+        <p className="text-center mt-4 lg:pt-4 lg:text-xl">
+          Select your favorite movies, create a card and share it with your friends✨
+        </p>
+
+        <form onSubmit={handleSearchSubmit} className="flex mt-14">
+          <input
+            type="text"
+            placeholder="Search movies"
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            className="rounded-l-lg p-4 border-t border-b border-l text-gray-800 border-gray-200 bg-white focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="px-8 rounded-r-lg bg-yellow-400 text-gray-800 font-bold p-4 uppercase border-yellow-500"
+          >
+            Search
+          </button>
+        </form>
+      </div>
 
       {previewOpen && (
         <PreviewModal
@@ -116,29 +139,13 @@ const Landing = () => {
         />
       )}
 
-      <form onSubmit={handleSearchSubmit} className="flex">
-        <input
-          type="text"
-          placeholder="Search movies"
-          value={searchQuery}
-          onChange={handleSearchInputChange}
-          className="rounded-l-lg p-4 border-t border-b border-l text-gray-800 border-gray-200 bg-white focus:outline-none"
-        />
-        <button
-          type="submit"
-          className="px-8 rounded-r-lg bg-yellow-400 text-gray-800 font-bold p-4 uppercase border-yellow-500"
-        >
-          Search
-        </button>
-      </form>
-
       {loading ? (
         <div className="">
           <div className="w-8 h-8 border-4 border-yellow-200 rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="flex flex-col mb-12">
-          <div className="grid grid-flow-row gap-4 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-12">
+          <div className="grid grid-flow-row gap-4 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:p-12 xl:grid-cols-4 py-12 px-3">
             {movies.map((movie) => (
               <MovieCard
                 key={movie.id}
