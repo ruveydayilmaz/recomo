@@ -1,5 +1,6 @@
 # RecoMo
-![284shots_so (1)](https://github.com/ruveydayilmaz/recomo/assets/74985368/547603d8-3862-42e2-b868-8271d5d812d3)
+![284shots_so (1)](https://github.com/ruveydayilmaz/recomo/assets/74985368/f6e278a6-7f23-4f70-a444-64d0d712e1dc)
+
 
 RecoMo is a web application that allows you to select your favorite movies, create a card, and share it with your friends! With RecoMo, you can showcase your movie recommendations in a visually appealing and interactive way.
 
