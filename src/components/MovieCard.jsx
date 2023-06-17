@@ -4,12 +4,16 @@ import noImage from "../assets/no-image.png";
 const MovieCard = ({ movie, selected, onSelect }) => {
   var posterUrl;
 
+  // Determine the poster URL based on the availability of the poster path
   if (movie.poster_path) {
     posterUrl = `/img/${movie.poster_path}`;
   } else {
     posterUrl = noImage;
   }
 
+  /**
+   * Handles the click event on the card.
+   */
   const handleCardClick = () => {
     onSelect(movie);
   };

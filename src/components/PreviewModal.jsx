@@ -21,6 +21,9 @@ const PreviewModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
+  /**
+   * Handles the copy event for the image URL.
+   */
   const handleCopy = () => {
     navigator.clipboard
       .writeText(imageUrl)
@@ -32,6 +35,10 @@ const PreviewModal = ({
     }, 2000);
   };
 
+  /**
+   * Handles the border radius change event.
+   * @param {Object} e - The event object.
+   */
   const handleBorderRadiusChange = (e) => {
     const { value } = e.target;
     setCardStyle((prevStyle) => ({
@@ -40,6 +47,9 @@ const PreviewModal = ({
     }));
   };
 
+  /**
+   * Handles the export image event.
+   */
   const handleExportImage = () => {
     setIsLoading(true);
     cardContainerRef.current.style.border = "none";
@@ -57,6 +67,10 @@ const PreviewModal = ({
     });
   };
 
+  /**
+   * Generates a URL for the share image event.
+   * @returns {string} The URL of the shared image.
+   */
   const handleShareImage = async () => {
     setIsLoading(true);
     cardContainerRef.current.style.border = "none";
@@ -79,6 +93,9 @@ const PreviewModal = ({
     return resultUrl;
   };
 
+  /**
+   * Handles the share on Twitter event.
+   */
   const handleShare = async () => {
     setIsLoading(true);
 
