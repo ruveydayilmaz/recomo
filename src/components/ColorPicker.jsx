@@ -48,8 +48,8 @@ const ColorPicker = ({ cardStyle, setCardStyle }) => {
     <div className="flex items-center">
       <button
         type="button"
-        className="w-10 h-10 rounded-full focus:outline-none inline-flex p-2 border border-gray-300"
-        style={{ background: cardStyle.backgroundColor, color: "white" }}
+        className="w-10 h-10 rounded-full focus:outline-none inline-flex p-2 border border-dark-600"
+        style={{ background: cardStyle.backgroundColor, color: "dark" }}
         onClick={handleButtonClick}
       >
         <svg
@@ -66,7 +66,7 @@ const ColorPicker = ({ cardStyle, setCardStyle }) => {
       </button>
       <label
         htmlFor="default-range"
-        className="block text-sm font-medium text-gray-900 dark:text-white ml-4"
+        className="block text-sm font-medium text-dark-300 dark:text-white ml-4"
       >
         Background Color
       </label>

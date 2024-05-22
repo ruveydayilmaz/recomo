@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 
-import { uploadCard } from "../api/cards";
 import ColorPicker from "./ColorPicker";
 import PreviewedMovieGrid from "./PreviewedMovieGrid";
+
 import DownloadIcon from "../assets/download.png";
 
 const PreviewModal = ({
@@ -17,28 +17,9 @@ const PreviewModal = ({
   const previewRef = useRef(null);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isThemeSwitchOn, setIsThemeSwitchOn] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
+  const [is16to9, setIs16to9] = useState(false);  // New state for 16:9 ratio
 
-  /**
-   * Handles the copy event for the image URL.
-   */
-  const handleCopy = () => {
-    navigator.clipboard
-      .writeText(imageUrl)
-      .then(() => setIsCopied(true))
-      .catch((error) => console.error("Copy failed:", error));
-
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
-  };
-
-  /**
-   * Handles the border radius change event.
-   * @param {Object} e - The event object.
-   */
   const handleBorderRadiusChange = (e) => {
     const { value } = e.target;
     setCardStyle((prevStyle) => ({
@@ -47,9 +28,6 @@ const PreviewModal = ({
     }));
   };
 
-  /**
-   * Handles the export image event.
-   */
   const handleExportImage = () => {
     setIsLoading(true);
     cardContainerRef.current.style.border = "none";
@@ -67,62 +45,19 @@ const PreviewModal = ({
     });
   };
 
-  /**
-   * Generates a URL for the share image event.
-   * @returns {string} The URL of the shared image.
-   */
-  const handleShareImage = async () => {
-    setIsLoading(true);
-    cardContainerRef.current.style.border = "none";
-    const canvas = await html2canvas(cardContainerRef.current, {
-      backgroundColor: null,
-      scale: 2,
-      allowTaint: true,
-      useCors: true,
-    });
-    const imageUrl = canvas.toDataURL();
-    const response = await uploadCard(imageUrl);
-
-    let imageName = response.data.url.split("recomo/")[1];
-    imageName = imageName.split(".png")[0];
-    const domainUrl = window.location.origin;
-    const resultUrl = `${domainUrl}/card/${imageName}`;
-    setImageUrl(resultUrl);
-    setIsLoading(false);
-
-    return resultUrl;
-  };
-
-  /**
-   * Handles the share on Twitter event.
-   */
-  const handleShare = async () => {
-    setIsLoading(true);
-
-    const resultUrl = await handleShareImage();
-
-    const title = "Looking for movie recommendations? Look no further!";
-    const hashtags = ["recomo", "movie"];
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      title
-    )}&url=${encodeURIComponent(resultUrl)}&hashtags=${encodeURIComponent(
-      hashtags
-    )}`;
-    window.open(twitterUrl, "_blank");
-
-    setIsLoading(false);
+  const handleAspectRatioChange = () => {
+    setIs16to9(!is16to9);
   };
 
   return (
     <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 z-40">
-      <div className="w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl overflow-y-auto sm:rounded-lg bg-white p-4 relative">
+      <div className="w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl overflow-y-auto sm:rounded-lg bg-white dark:bg-dark-200 p-4 relative">
         <div className="flex justify-end w-[800px] md:w-full">
           <div
             onClick={() => {
               setPreviewOpen(false);
-              setImageUrl("");
             }}
-            className="bg-gray-300 hover:bg-gray-500 cursor-pointer hover:text-gray-300 font-sans text-gray-500 w-8 h-8 flex items-center justify-center rounded-full relative"
+            className="bg-dark-600/20 dark:bg-dark-300/80 hover:bg-dark-600/30 hover:dark:bg-dark-300 cursor-pointer text-dark-500 w-8 h-8 flex items-center justify-center rounded-full relative"
           >
             <svg
               className="w-4 h-4 fill-current"
@@ -133,8 +68,9 @@ const PreviewModal = ({
             </svg>
           </div>
         </div>
-        <div className="flex flex-col md:items-center mb-4">
-          <div className="flex bg-white justify-around w-[800px] md:w-full">
+
+        <div className="flex flex-col md:items-center mb-4 px-4">
+          <div className="flex justify-between w-[800px] md:w-full">
             <ColorPicker cardStyle={cardStyle} setCardStyle={setCardStyle} />
 
             <div className="flex items-center">
@@ -144,11 +80,11 @@ const PreviewModal = ({
                 onChange={handleBorderRadiusChange}
                 id="default-range"
                 type="range"
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                className="w-full h-2 bg-dark-600 rounded-lg appearance-none cursor-pointer"
               />
               <label
                 htmlFor="default-range"
-                className="ml-4 text-sm font-medium text-gray-900 dark:text-white"
+                className="ml-4 text-sm font-medium text-dark-200 dark:text-white"
               >
                 Border
               </label>
@@ -157,14 +93,15 @@ const PreviewModal = ({
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                checked={isSwitchOn}
-                onChange={() => setIsSwitchOn(!isSwitchOn)}
+                checked={is16to9? false : isSwitchOn}
+                onChange={() => !is16to9 && setIsSwitchOn(!isSwitchOn)}
                 className="sr-only peer"
               />
-              <div className="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
-              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Card Style
-              </span>
+              <div className="w-[41px] h-6 bg-dark-600 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ADD8E6]"></div>
+              <p className="ml-3 text-sm font-medium text-dark-300 dark:text-white">
+                Card Style <br />
+                {is16to9 && <span className="text-dark-600">(Unavailable for 16:9 ratio)</span>}
+              </p>
             </label>
 
             <label className="relative inline-flex items-center cursor-pointer">
@@ -174,16 +111,34 @@ const PreviewModal = ({
                 onChange={() => setIsThemeSwitchOn(!isThemeSwitchOn)}
                 className="sr-only peer"
               />
-              <div className="w-[41px] h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#ADD8E6] dark:peer-focus:ring-[#ADD8E6] dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#ADD8E6]"></div>
-              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="w-[41px] h-6 bg-dark-600 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ADD8E6]"></div>
+              <span className="ml-3 text-sm font-medium text-dark-300 dark:text-white">
                 Card Theme
+              </span>
+            </label>
+
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={is16to9}
+                onChange={handleAspectRatioChange}
+                className="sr-only peer"
+              />
+              <div className="w-[41px] h-6 bg-dark-600 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[10px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ADD8E6]"></div>
+              <span className="ml-3 text-sm font-medium text-dark-300 dark:text-white">
+                16:9 Ratio
               </span>
             </label>
           </div>
 
           <div
-            className="w-full h-[450px] min-w-[60rem] selected-movies rounded mt-4 bg-gray-100 border border-gray-300 flex flex-col justify-around relative"
-            style={cardStyle}
+            className="w-full selected-movies rounded mt-4 bg-dark-100 border border-dark-600/50 flex flex-col justify-around items-center relative dark:bg-dark-700"
+            style={{
+              ...cardStyle,
+              height: is16to9 ? '640px' : '450px',
+              width: is16to9 ? '360px' : '60rem',
+              minWidth: is16to9 ? 'unset' : '60rem',
+            }}
             ref={cardContainerRef}
           >
             <PreviewedMovieGrid
@@ -192,6 +147,7 @@ const PreviewModal = ({
               ref={previewRef}
               isSwitchOn={isSwitchOn}
               isThemeSwitchOn={isThemeSwitchOn}
+              is16to9={is16to9}
             />
             <p
               className="text-[10px] absolute bottom-2 left-1/2 transform -translate-x-1/2"
@@ -205,74 +161,27 @@ const PreviewModal = ({
             </p>
           </div>
         </div>
-        <div className="flex justify-between items-center">
-          <div className="w-1/4 sm:w-1/2 md:w-2/3 lg:w-3/4 xl:w-1/12">
-            <p className="font-medium text-sm text-gray-900 select-none pl-1 pb-2">
-              Share
-            </p>
-            <div className="flex justify-between items-center">
-              <button
-                onClick={handleExportImage}
-                className="rounded-full w-9 transition-transform transform hover:scale-110"
-              >
-                <img className="hover:" src={DownloadIcon} alt="download" />
-              </button>
 
-              <button
-                className="transition-transform transform hover:scale-125"
-                onClick={handleShare}
-              >
-                <span className="sr-only">Twitter</span>
-                <svg
-                  aria-hidden="true"
-                  className="w-8 h-8 text-blue-500"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19.633,7.997c0.013,0.175,0.013,0.349,0.013,0.523c0,5.325-4.053,11.461-11.46,11.461c-2.282,0-4.402-0.661-6.186-1.809 c0.324,0.037,0.636,0.05,0.973,0.05c1.883,0,3.616-0.636,5.001-1.721c-1.771-0.037-3.255-1.197-3.767-2.793 c0.249,0.037,0.499,0.062,0.761,0.062c0.361,0,0.724-0.05,1.061-0.137c-1.847-0.374-3.23-1.995-3.23-3.953v-0.05 c0.537,0.299,1.16,0.486,1.82,0.511C3.534,9.419,2.823,8.184,2.823,6.787c0-0.748,0.199-1.434,0.548-2.032 c1.983,2.443,4.964,4.04,8.306,4.215c-0.062-0.3-0.1-0.611-0.1-0.923c0-2.22,1.796-4.028,4.028-4.028 c1.16,0,2.207,0.486,2.943,1.272c0.91-0.175,1.782-0.512,2.556-0.973c-0.299,0.935-0.936,1.721-1.771,2.22 c0.811-0.088,1.597-0.312,2.319-0.624C21.104,6.712,20.419,7.423,19.633,7.997z"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div className="w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4">
-            <button
-              className="font-medium text-[11px] md:text-sm text-gray-900 hover:text-yellow-500"
-              onClick={handleShareImage}
-            >
-              Or click <span className="text-yellow-500">here</span> to generate
-              a link
-            </button>
-            <div onClick={handleCopy} className="flex justify-between items-center border-2 border-gray-200 pl-1 relative hover:bg-gray-100 cursor-pointer h-10">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                className="fill-gray-500 mr-1"
-              >
-                <path d="M8.465 11.293c1.133-1.133 3.109-1.133 4.242 0l.707.707 1.414-1.414-.707-.707c-.943-.944-2.199-1.465-3.535-1.465s-2.592.521-3.535 1.465L4.929 12a5.008 5.008 0 0 0 0 7.071 4.983 4.983 0 0 0 3.535 1.462A4.982 4.982 0 0 0 12 19.071l.707-.707-1.414-1.414-.707.707a3.007 3.007 0 0 1-4.243 0 3.005 3.005 0 0 1 0-4.243l2.122-2.121z"></path>
-                <path d="m12 4.929-.707.707 1.414 1.414.707-.707a3.007 3.007 0 0 1 4.243 0 3.005 3.005 0 0 1 0 4.243l-2.122 2.121c-1.133 1.133-3.109 1.133-4.242 0L10.586 12l-1.414 1.414.707.707c.943.944 2.199 1.465 3.535 1.465s2.592-.521 3.535-1.465L19.071 12a5.008 5.008 0 0 0 0-7.071 5.006 5.006 0 0 0-7.071 0z"></path>
+        <div className="flex justify-end w-full px-4">
+          <button onClick={handleExportImage} className="group rounded-md py-1 px-2 shadow bg-primary-400 text-white cursor-pointer flex space-x-2 items-center overflow-hidden">
+            <div className="text-white flex justify-center items-center">
+              <svg id="arrow" className="w-4 h-4 transition-all group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
               </svg>
-              {!isCopied && (
-                <input
-                  defaultValue={imageUrl}
-                  title="copy"
-                  className="py-2 focus:outline-none w-full text-gray-500 text-sm cursor-pointer hover:bg-gray-100"
-                />
-              )}
-              {isCopied && (
-                <div className="text-yellow-500 font-medium text-sm absolute left-24">
-                  Copied to clipboard!
-                </div>
-              )}
             </div>
-          </div>
+            <p>Download Image</p>
+          </button>
         </div>
+
         {isLoading && (
-          <div className="absolute bg-gray-100 bg-opacity-50 w-full h-full flex items-center justify-center top-0 left-0">
-            <div className="w-8 h-8 border-4 border-yellow-200 rounded-full animate-spin"></div>
+          <div className="absolute top-0 left-0 flex justify-center items-center space-x-1 text-md text-white dark:text-dark-300 bg-dark-100/50 w-full h-full">
+            <svg fill='none' className="w-12 h-12 animate-spin" viewBox="0 0 32 32" xmlns='http://www.w3.org/2000/svg'>
+              <path clipRule='evenodd'
+                d='M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z'
+                fill='currentColor' fillRule='evenodd' />
+            </svg>
+
+            <p>Loading ...</p>
           </div>
         )}
       </div>

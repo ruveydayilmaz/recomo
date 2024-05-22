@@ -1,7 +1,7 @@
 import React from "react";
 import PreviewedMovieCard from "./PreviewedMovieCard";
 
-const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn }) => {
+const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn, is16to9 }) => {
   const angleStep = 14; // Difference in rotation angle between cards
   const initialRotation = -23; // Starting rotation angle
   const elevationStep = 50; // Difference in elevation between cards
@@ -11,7 +11,7 @@ const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn }) => {
   const titleColor = isThemeSwitchOn ? "white" : "#374151";
 
   return (
-    <div className="flex justify-center">
+    <div className={`${is16to9? "grid grid-cols-2 gap-2 w-[300px]" : "flex justify-center"}`}>
       {movies.map((movie, index) => {
         const rotation = isSwitchOn ? initialRotation + index * angleStep : 0;
         const elevation = isSwitchOn
@@ -27,6 +27,7 @@ const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn }) => {
             elevation={elevation}
             cardColor={cardColor}
             titleColor={titleColor}
+            is16to9={is16to9}
           />
         );
       })}

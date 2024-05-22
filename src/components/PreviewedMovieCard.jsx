@@ -8,18 +8,12 @@ const PreviewedMovieCard = ({
   elevation,
   cardColor,
   titleColor,
+  is16to9,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const titleRef = useRef(null);
 
   const posterUrl = movie.poster_path ? `/img/${movie.poster_path}` : noImage;
-
-  /**
-   * Handles the click event on the card.
-   */
-  const handleCardClick = () => {
-    onSelect(movie);
-  };
 
   const cardStyle = {
     transform: `rotate(${rotation}deg) translateY(${elevation}px)`,
@@ -27,16 +21,15 @@ const PreviewedMovieCard = ({
     color: titleColor,
   };
 
-  /**
-   * Handles the mouse enter event on the card.
-   */
+  const handleCardClick = () => {
+    onSelect(movie);
+  };
+
+
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
 
-  /**
-   * Handles the mouse leave event on the card.
-   */
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
@@ -61,7 +54,7 @@ const PreviewedMovieCard = ({
 
   return (
     <div
-      className="bg-white w-48 h-94 shadow-md rounded m-3 flex flex-col items-center relative"
+      className={`bg-white shadow-md rounded flex flex-col items-center relative ${is16to9? "w-36" : "w-48 h-94 m-3"}`}
       style={cardStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -69,7 +62,7 @@ const PreviewedMovieCard = ({
       {isHovered && (
         <span
           onClick={handleCardClick}
-          className="absolute p-2 -right-2 -top-2 rounded-full bg-gray-300 dark:bg-gray-900 hover:bg-gray-500 cursor-pointer hover:text-gray-300 text-gray-500 w-8 h-8 flex items-center justify-center"
+          className="absolute p-2 -right-2 -top-2 bg-dark-600/20 dark:bg-dark-300/80 hover:bg-dark-600/30 hover:dark:bg-dark-300 cursor-pointer text-dark-500 w-8 h-8 flex items-center justify-center rounded-full"
         >
           <svg
             className="w-4 h-4 fill-current"
@@ -80,17 +73,18 @@ const PreviewedMovieCard = ({
           </svg>
         </span>
       )}
+
       <img
-        className="w-40 mt-4 min-w-[10rem] h-full"
+        className={`mt-4 object-cover ${is16to9? "w-28" : "w-40 min-w-[10rem]"}`}
         src={posterUrl}
         alt={movie.title}
       />
 
-      <div className="m-4 mb-2">
+      <div className={`${is16to9? "m-2" : "m-4 mb-2"} h-full flex items-center`}>
         <a
           href={`https://www.themoviedb.org/movie/${movie.id}`}
           target="_blank"
-          className="hover:text-yellow-600"
+          className="hover:text-primary-500"
         >
           <span ref={titleRef} className="text-sm font-semibold break-words">
             {movie.title}
