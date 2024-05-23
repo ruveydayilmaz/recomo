@@ -1,6 +1,9 @@
+// PACKAGES
 import { defineConfig } from 'vite';
-import postcss from './postcss.config.js';
 import react from '@vitejs/plugin-react';
+
+// CSS
+import postcss from './postcss.config.js';
 
 export default defineConfig({
   // CSS configuration
@@ -17,7 +20,7 @@ export default defineConfig({
       {
         find: /^~.+/,
         replacement: (val) => {
-          return val.replace(/^~/,"");
+          return val.replace(/^~/, "");
         },
       },
     ],

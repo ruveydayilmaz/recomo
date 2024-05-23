@@ -1,8 +1,11 @@
+// PACKAGES
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
+// CSS
 import "./css/style.css";
 
+// COMPONENTS
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 

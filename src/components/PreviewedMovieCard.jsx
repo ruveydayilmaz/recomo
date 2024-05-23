@@ -1,5 +1,9 @@
+// PACKAGES
 import React, { useState, useRef, useEffect } from "react";
+
+// ASSETS
 import noImage from "../assets/no-image.png";
+import { CloseIcon } from "../assets/Icons";
 
 const PreviewedMovieCard = ({
   movie,
@@ -24,7 +28,6 @@ const PreviewedMovieCard = ({
   const handleCardClick = () => {
     onSelect(movie);
   };
-
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -54,33 +57,24 @@ const PreviewedMovieCard = ({
 
   return (
     <div
-      className={`bg-white shadow-md rounded flex flex-col items-center relative ${is16to9? "w-36" : "w-48 h-94 m-3"}`}
+      className={`bg-white shadow-md rounded flex flex-col items-center relative ${is16to9 ? "w-36" : "w-48 h-94 m-3"}`}
       style={cardStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {isHovered && (
-        <span
-          onClick={handleCardClick}
-          className="absolute p-2 -right-2 -top-2 bg-dark-600/20 dark:bg-dark-300/80 hover:bg-dark-600/30 hover:dark:bg-dark-300 cursor-pointer text-dark-500 w-8 h-8 flex items-center justify-center rounded-full"
-        >
-          <svg
-            className="w-4 h-4 fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path d="M6.364 5.464l-1.414 1.414 4.95 4.95-4.95 4.95 1.414 1.414 4.95-4.95 4.95 4.95 1.414-1.414-4.95-4.95 4.95-4.95-1.414-1.414-4.95 4.95-4.95-4.95z" />
-          </svg>
+        <span onClick={handleCardClick}>
+          <CloseIcon className="absolute p-2 -right-2 -top-2 bg-dark-600/20 dark:bg-dark-300/80 hover:bg-dark-600/30 hover:dark:bg-dark-300 cursor-pointer text-dark-500 w-8 h-8 flex items-center justify-center rounded-full" />
         </span>
       )}
 
       <img
-        className={`mt-4 object-cover ${is16to9? "w-28" : "w-40 min-w-[10rem]"}`}
+        className={`mt-4 object-cover ${is16to9 ? "w-28" : "w-40 min-w-[10rem]"}`}
         src={posterUrl}
         alt={movie.title}
       />
 
-      <div className={`${is16to9? "m-2" : "m-4 mb-2"} h-full flex items-center`}>
+      <div className={`${is16to9 ? "m-2" : "m-4 mb-2"} h-full flex items-center`}>
         <a
           href={`https://www.themoviedb.org/movie/${movie.id}`}
           target="_blank"

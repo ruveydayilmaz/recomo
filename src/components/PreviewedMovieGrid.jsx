@@ -1,4 +1,7 @@
+// PACKAGES
 import React from "react";
+
+// COMPONENTS
 import PreviewedMovieCard from "./PreviewedMovieCard";
 
 const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn, is16to9 }) => {
@@ -11,7 +14,7 @@ const MovieGrid = ({ movies, onSelect, isSwitchOn, isThemeSwitchOn, is16to9 }) =
   const titleColor = isThemeSwitchOn ? "white" : "#374151";
 
   return (
-    <div className={`${is16to9? "grid grid-cols-2 gap-2 w-[300px]" : "flex justify-center"}`}>
+    <div className={`${is16to9 ? "grid grid-cols-2 gap-2 w-[300px]" : "flex justify-center"}`}>
       {movies.map((movie, index) => {
         const rotation = isSwitchOn ? initialRotation + index * angleStep : 0;
         const elevation = isSwitchOn

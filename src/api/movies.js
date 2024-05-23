@@ -1,3 +1,4 @@
+// PACKAGES
 import axios from 'axios';
 
 /**
@@ -8,14 +9,14 @@ import axios from 'axios';
  * @returns {Promise<Object>} A promise that resolves to the response object containing the search results.
  */
 export const searchMovie = async (query, page) => await axios.get('/api/3/search/movie', {
-    params: {
-      api_key: import.meta.env.VITE_DB_API_KEY,
-      query: query,
-      include_adult: false,
-      language: 'en-US',
-      page: page,
-    },
-  })
+  params: {
+    api_key: import.meta.env.VITE_DB_API_KEY,
+    query: query,
+    include_adult: false,
+    language: 'en-US',
+    page: page,
+  },
+})
 
 /**
  * Fetches popular movies from the API.

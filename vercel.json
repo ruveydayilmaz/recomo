@@ -8,6 +8,9 @@
       "source": "/img/:path(.*)",
       "destination": "https://image.tmdb.org/t/p/original/:path"
     },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }

@@ -1,10 +1,14 @@
+// PACKAGES
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 
+// COMPONENTS
 import ColorPicker from "./ColorPicker";
 import PreviewedMovieGrid from "./PreviewedMovieGrid";
+import LoadingSpinner from "./LoadingSpinner";
 
-import DownloadIcon from "../assets/download.png";
+// ASSETS
+import { ArrowDownIcon2, CloseIcon } from "../assets/Icons";
 
 const PreviewModal = ({
   cardStyle,
@@ -18,7 +22,7 @@ const PreviewModal = ({
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [isThemeSwitchOn, setIsThemeSwitchOn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [is16to9, setIs16to9] = useState(false);  // New state for 16:9 ratio
+  const [is16to9, setIs16to9] = useState(false);
 
   const handleBorderRadiusChange = (e) => {
     const { value } = e.target;
@@ -30,6 +34,7 @@ const PreviewModal = ({
 
   const handleExportImage = () => {
     setIsLoading(true);
+
     cardContainerRef.current.style.border = "none";
     html2canvas(cardContainerRef.current, {
       backgroundColor: null,
@@ -54,18 +59,10 @@ const PreviewModal = ({
       <div className="w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl overflow-y-auto sm:rounded-lg bg-white dark:bg-dark-200 p-4 relative">
         <div className="flex justify-end w-[800px] md:w-full">
           <div
-            onClick={() => {
-              setPreviewOpen(false);
-            }}
+            onClick={() => { setPreviewOpen(false) }}
             className="bg-dark-600/20 dark:bg-dark-300/80 hover:bg-dark-600/30 hover:dark:bg-dark-300 cursor-pointer text-dark-500 w-8 h-8 flex items-center justify-center rounded-full relative"
           >
-            <svg
-              className="w-4 h-4 fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path d="M6.364 5.464l-1.414 1.414 4.95 4.95-4.95 4.95 1.414 1.414 4.95-4.95 4.95 4.95 1.414-1.414-4.95-4.95 4.95-4.95-1.414-1.414-4.95 4.95-4.95-4.95z" />
-            </svg>
+            <CloseIcon className="w-4 h-4 fill-current" />
           </div>
         </div>
 
@@ -82,10 +79,7 @@ const PreviewModal = ({
                 type="range"
                 className="w-full h-2 bg-dark-600 rounded-lg appearance-none cursor-pointer"
               />
-              <label
-                htmlFor="default-range"
-                className="ml-4 text-sm font-medium text-dark-200 dark:text-white"
-              >
+              <label htmlFor="default-range" className="ml-4 text-sm font-medium text-dark-200 dark:text-white">
                 Border
               </label>
             </div>
@@ -93,7 +87,7 @@ const PreviewModal = ({
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                checked={is16to9? false : isSwitchOn}
+                checked={is16to9 ? false : isSwitchOn}
                 onChange={() => !is16to9 && setIsSwitchOn(!isSwitchOn)}
                 className="sr-only peer"
               />
@@ -165,25 +159,13 @@ const PreviewModal = ({
         <div className="flex justify-end w-full px-4">
           <button onClick={handleExportImage} className="group rounded-md py-1 px-2 shadow bg-primary-400 text-white cursor-pointer flex space-x-2 items-center overflow-hidden">
             <div className="text-white flex justify-center items-center">
-              <svg id="arrow" className="w-4 h-4 transition-all group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-              </svg>
+              <ArrowDownIcon2 className="w-4 h-4 transition-all group-hover:-translate-y-1" />
             </div>
             <p>Download Image</p>
           </button>
         </div>
 
-        {isLoading && (
-          <div className="absolute top-0 left-0 flex justify-center items-center space-x-1 text-md text-white dark:text-dark-300 bg-dark-100/50 w-full h-full">
-            <svg fill='none' className="w-12 h-12 animate-spin" viewBox="0 0 32 32" xmlns='http://www.w3.org/2000/svg'>
-              <path clipRule='evenodd'
-                d='M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z'
-                fill='currentColor' fillRule='evenodd' />
-            </svg>
-
-            <p>Loading ...</p>
-          </div>
-        )}
+        {isLoading && <LoadingSpinner />}
       </div>
     </div>
   );
